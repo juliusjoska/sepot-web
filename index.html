@@ -1,0 +1,1244 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sepot - Soukromy messenger z Ceska | E2E sifrovani</title>
+    <meta name="description" content="Sepot je soukromy messenger z Ceska s end-to-end sifrovanim. Zadna metadata, otevreny kod, zdarma. Rust backend, Flutter aplikace.">
+    <meta name="keywords" content="messenger, sifrovani, e2e, end-to-end, soukromi, cesky, privacy, chat, bezpecnost, open source">
+    <meta name="author" content="ajtak.it - Julius Joska">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://sepot.app/">
+
+    <!-- Security Headers -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://sepot.app/">
+    <meta property="og:title" content="Sepot - Soukromy messenger z Ceska">
+    <meta property="og:description" content="End-to-end sifrovany messenger. Zadna metadata, otevreny kod, zdarma.">
+    <meta property="og:image" content="https://sepot.app/og-image.png">
+    <meta property="og:locale" content="cs_CZ">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://sepot.app/">
+    <meta name="twitter:title" content="Sepot - Soukromy messenger z Ceska">
+    <meta name="twitter:description" content="End-to-end sifrovany messenger. Zadna metadata, otevreny kod, zdarma.">
+    <meta name="twitter:image" content="https://sepot.app/og-image.png">
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Sepot",
+        "applicationCategory": "CommunicationApplication",
+        "operatingSystem": "iOS, Android, Windows, macOS, Linux",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "CZK"
+        },
+        "author": {
+            "@type": "Organization",
+            "name": "ajtak.it",
+            "url": "https://ajtak.it",
+            "taxID": "24409979"
+        },
+        "description": "Soukromy messenger s end-to-end sifrovanim z Ceska"
+    }
+    </script>
+
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="apple-touch-icon" href="logo-64.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --text: #111;
+            --text-secondary: #555;
+            --text-muted: #888;
+            --bg: #fff;
+            --bg-secondary: #fafafa;
+            --border: #e5e5e5;
+            --accent: #0a6847;
+            --accent-light: #e8f5e9;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text);
+            background: var(--bg);
+            line-height: 1.6;
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            z-index: 100;
+        }
+
+        .nav-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 20px;
+            color: var(--text);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--text);
+        }
+
+        .nav-cta {
+            background: var(--text);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 14px;
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+
+        .nav-cta:hover {
+            opacity: 0.85;
+        }
+
+        .mobile-toggle {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        /* Hero */
+        .hero {
+            padding: 160px 0 100px;
+            text-align: center;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            background: var(--accent-light);
+            color: var(--accent);
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 24px;
+        }
+
+        .hero h1 {
+            font-size: clamp(40px, 6vw, 64px);
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+            margin-bottom: 20px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 500px;
+            margin: 0 auto 40px;
+            line-height: 1.7;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 15px;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--text);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.85;
+        }
+
+        .btn-secondary {
+            background: var(--bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--text);
+        }
+
+        .btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Phone mockup */
+        .hero-visual {
+            margin-top: 80px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .phone {
+            width: 280px;
+            background: #111;
+            border-radius: 40px;
+            padding: 12px;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.15);
+        }
+
+        .phone-screen {
+            background: white;
+            border-radius: 30px;
+            overflow: hidden;
+            aspect-ratio: 9/19;
+        }
+
+        .phone-header {
+            background: var(--bg-secondary);
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .phone-avatar {
+            width: 40px;
+            height: 40px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .phone-contact {
+            flex: 1;
+        }
+
+        .phone-contact-name {
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .phone-contact-status {
+            font-size: 12px;
+            color: var(--accent);
+        }
+
+        .phone-messages {
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .msg {
+            max-width: 80%;
+            padding: 10px 14px;
+            border-radius: 16px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .msg-in {
+            background: var(--bg-secondary);
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+
+        .msg-out {
+            background: var(--accent);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        .phone-footer {
+            padding: 12px 16px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .phone-footer-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            color: var(--accent);
+            background: var(--accent-light);
+            padding: 6px 10px;
+            border-radius: 100px;
+            margin: 0 auto;
+        }
+
+        .phone-footer-badge svg {
+            width: 12px;
+            height: 12px;
+        }
+
+        /* Features */
+        .features {
+            padding: 100px 0;
+            border-top: 1px solid var(--border);
+        }
+
+        .section-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 12px;
+        }
+
+        .section-title {
+            font-size: clamp(28px, 4vw, 40px);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 16px;
+        }
+
+        .section-desc {
+            color: var(--text-secondary);
+            font-size: 17px;
+            max-width: 500px;
+        }
+
+        .features-header {
+            margin-bottom: 60px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+        }
+
+        .feature {
+            padding: 32px;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            transition: border-color 0.2s;
+        }
+
+        .feature:hover {
+            border-color: var(--text-muted);
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .feature-icon svg {
+            width: 24px;
+            height: 24px;
+            color: var(--text);
+        }
+
+        .feature h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .feature p {
+            color: var(--text-secondary);
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        /* Security */
+        .security {
+            padding: 100px 0;
+            background: var(--bg-secondary);
+        }
+
+        .security-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+
+        .security-text .section-desc {
+            margin-bottom: 32px;
+        }
+
+        .security-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .security-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            font-size: 15px;
+        }
+
+        .security-list svg {
+            width: 20px;
+            height: 20px;
+            color: var(--accent);
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .crypto-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .crypto-header {
+            padding: 16px 20px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .crypto-body {
+            padding: 8px 0;
+        }
+
+        .crypto-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 20px;
+            font-size: 14px;
+        }
+
+        .crypto-row:not(:last-child) {
+            border-bottom: 1px solid var(--border);
+        }
+
+        .crypto-label {
+            color: var(--text-secondary);
+        }
+
+        .crypto-value {
+            font-weight: 500;
+            font-family: 'SF Mono', 'Monaco', monospace;
+            color: var(--accent);
+        }
+
+        /* About */
+        .about {
+            padding: 100px 0;
+            border-top: 1px solid var(--border);
+        }
+
+        .about-content {
+            max-width: 800px;
+        }
+
+        /* Download */
+        .download {
+            padding: 100px 0;
+            background: var(--text);
+            color: white;
+        }
+
+        .download-content {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .download .section-label {
+            color: rgba(255,255,255,0.5);
+        }
+
+        .download .section-title {
+            color: white;
+        }
+
+        .download .section-desc {
+            color: rgba(255,255,255,0.7);
+            margin: 0 auto 40px;
+        }
+
+        .download-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .store-btn {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 24px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 12px;
+            color: white;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+
+        .store-btn:hover {
+            background: rgba(255,255,255,0.15);
+        }
+
+        .store-btn svg {
+            width: 28px;
+            height: 28px;
+        }
+
+        .store-btn-text {
+            text-align: left;
+        }
+
+        .store-btn-label {
+            font-size: 11px;
+            opacity: 0.7;
+        }
+
+        .store-btn-name {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .download-note {
+            margin-top: 32px;
+            font-size: 14px;
+            color: rgba(255,255,255,0.5);
+        }
+
+        /* Footer */
+        footer {
+            padding: 60px 0 40px;
+            border-top: 1px solid var(--border);
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 40px;
+        }
+
+        .footer-brand p {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-top: 12px;
+            max-width: 280px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 80px;
+        }
+
+        .footer-col h4 {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col li {
+            margin-bottom: 10px;
+        }
+
+        .footer-col a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+
+        .footer-col a:hover {
+            color: var(--text);
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 16px;
+        }
+
+        .footer-social a {
+            color: var(--text-muted);
+            transition: color 0.2s;
+        }
+
+        .footer-social a:hover {
+            color: var(--text);
+        }
+
+        .footer-social svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Preview Section */
+        .preview {
+            padding: 100px 0;
+            border-top: 1px solid var(--border);
+        }
+
+        .preview-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+
+        .preview-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            background: linear-gradient(135deg, #F97316 0%, #FB923C 100%);
+            color: white;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 16px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .preview-phone {
+            max-width: 280px;
+            margin: 0 auto;
+        }
+
+        .preview-phone-frame {
+            background: #111;
+            border-radius: 40px;
+            padding: 12px;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.15);
+        }
+
+        .preview-phone-screen {
+            border-radius: 30px;
+            overflow: hidden;
+        }
+
+        .preview-phone-screen img {
+            width: 100%;
+            display: block;
+        }
+
+        .booking-box {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px;
+            margin-top: 32px;
+        }
+
+        .booking-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .booking-subtitle {
+            color: var(--text-secondary);
+            font-size: 15px;
+            margin-bottom: 20px;
+        }
+
+        .booking-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 28px;
+            background: var(--accent);
+            color: white;
+            font-weight: 600;
+            border-radius: 10px;
+            text-decoration: none;
+            transition: opacity 0.2s;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .booking-btn:hover {
+            opacity: 0.85;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 24px;
+            }
+
+            .security-content {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                gap: 40px;
+            }
+
+            .footer-links {
+                gap: 40px;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-toggle {
+                display: block;
+            }
+
+            .hero {
+                padding: 120px 0 60px;
+            }
+
+            .hero h1 {
+                font-size: 36px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .download-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .store-btn {
+                width: 100%;
+                max-width: 280px;
+                justify-content: center;
+            }
+
+            .footer-links {
+                flex-direction: column;
+                gap: 32px;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+            }
+        }
+    </style>
+
+    <!-- Umami Analytics - TODO: Replace WEBSITE_ID after Umami setup -->
+    <script defer src="https://analytics.ajtak.app/script.js" data-website-id="sepot-app"></script>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <div class="nav-inner">
+                <a href="#" class="logo">
+                    <div class="logo-icon">
+                        <img src="logo-64.png" alt="Šepot logo">
+                    </div>
+                    Šepot
+                </a>
+                <ul class="nav-links">
+                    <li><a href="#features">Funkce</a></li>
+                    <li><a href="#security">Bezpečnost</a></li>
+                    <li><a href="#about">O projektu</a></li>
+                    <li><a href="https://ajtak.it" target="_blank" rel="noopener noreferrer">ajtak.it</a></li>
+                </ul>
+                <a href="#download" class="nav-cta">Stáhnout</a>
+                <button class="mobile-toggle">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="3" y1="12" x2="21" y2="12"/>
+                        <line x1="3" y1="6" x2="21" y2="6"/>
+                        <line x1="3" y1="18" x2="21" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-badge">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="11" width="18" height="11" rx="2"/>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+                End-to-end šifrováno
+            </div>
+            <h1>Soukromý messenger z Česka</h1>
+            <p>End-to-end šifrované zprávy, žádná metadata, otevřený kód. Vytvořeno s důrazem na soukromí.</p>
+            <div class="hero-buttons">
+                <a href="#download" class="btn btn-primary">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="7 10 12 15 17 10"/>
+                        <line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                    Stáhnout zdarma
+                </a>
+                <a href="#security" class="btn btn-secondary">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    </svg>
+                    Jak to funguje
+                </a>
+            </div>
+            <div class="hero-visual">
+                <div class="phone">
+                    <div class="phone-screen">
+                        <div class="phone-header">
+                            <div class="phone-avatar">MK</div>
+                            <div class="phone-contact">
+                                <div class="phone-contact-name">Martin Kolář</div>
+                                <div class="phone-contact-status">online</div>
+                            </div>
+                        </div>
+                        <div class="phone-messages">
+                            <div class="msg msg-in">Ahoj! Máš čas večer?</div>
+                            <div class="msg msg-out">Jasně, v 7 u Alberta?</div>
+                            <div class="msg msg-in">Super, tam budu!</div>
+                            <div class="msg msg-out">Těším se</div>
+                        </div>
+                        <div class="phone-footer">
+                            <div class="phone-footer-badge">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="11" width="18" height="11" rx="2"/>
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                </svg>
+                                Šifrováno
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features" id="features">
+        <div class="container">
+            <div class="features-header">
+                <div class="section-label">Funkce</div>
+                <h2 class="section-title">Soukromí bez kompromisů</h2>
+                <p class="section-desc">Navrženo od základu s důrazem na bezpečnost. Žádné zadní vrátka, žádné výmluvy.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="11" width="18" height="11" rx="2"/>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                        </svg>
+                    </div>
+                    <h3>E2E šifrování</h3>
+                    <p>Zprávy jsou šifrovány na vašem zařízení. Nikdo jiný je nemůže přečíst - ani my.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>
+                        </svg>
+                    </div>
+                    <h3>Žádná metadata</h3>
+                    <p>Nesbíráme nic. Ani kdo s kým píše, ani kdy, ani jak často. Úplné soukromí.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+                        </svg>
+                    </div>
+                    <h3>Open source</h3>
+                    <p>Kód je otevřený a auditovatelný. Můžete si ověřit, že děláme to, co říkáme.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        </svg>
+                    </div>
+                    <h3>Lokální šifrování</h3>
+                    <p>Data jsou šifrována i na vašem zařízení. Při ztrátě telefonu zůstávají v bezpečí.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="18" cy="5" r="3"/>
+                            <circle cx="6" cy="12" r="3"/>
+                            <circle cx="18" cy="19" r="3"/>
+                            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+                            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                        </svg>
+                    </div>
+                    <h3>P2P architektura</h3>
+                    <p>Server slouží pouze k navázání spojení. Zprávy jdou přímo mezi vámi.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                    </div>
+                    <h3>Skupinové chaty</h3>
+                    <p>Bezpečné skupinové konverzace s plným E2E šifrováním pro všechny účastníky.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="security" id="security">
+        <div class="container">
+            <div class="security-content">
+                <div class="security-text">
+                    <div class="section-label">Bezpečnost</div>
+                    <h2 class="section-title">Prověřená kryptografie</h2>
+                    <p class="section-desc">Používáme stejné algoritmy jako Signal a Threema. Ověřené, auditované, doporučované bezpečnostními experty.</p>
+                    <ul class="security-list">
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            Perfect Forward Secrecy - kompromitace klíče neodhalí historii
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            Zero-knowledge architektura - server neví nic o obsahu
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            Žádné zadní vrátka - ani pod nařízením soudu
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            Auditovatelný kód - kdokoli může ověřit bezpečnost
+                        </li>
+                    </ul>
+                </div>
+                <div class="crypto-card">
+                    <div class="crypto-header">Použité algoritmy</div>
+                    <div class="crypto-body">
+                        <div class="crypto-row">
+                            <span class="crypto-label">Výměna klíčů</span>
+                            <span class="crypto-value">X25519</span>
+                        </div>
+                        <div class="crypto-row">
+                            <span class="crypto-label">Šifrování zpráv</span>
+                            <span class="crypto-value">XSalsa20-Poly1305</span>
+                        </div>
+                        <div class="crypto-row">
+                            <span class="crypto-label">Digitální podpisy</span>
+                            <span class="crypto-value">Ed25519</span>
+                        </div>
+                        <div class="crypto-row">
+                            <span class="crypto-label">Derivace klíčů</span>
+                            <span class="crypto-value">Argon2id</span>
+                        </div>
+                        <div class="crypto-row">
+                            <span class="crypto-label">Knihovna</span>
+                            <span class="crypto-value">libsodium</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="about" id="about">
+        <div class="container">
+            <div class="about-content">
+                <div class="section-label">O projektu</div>
+                <h2 class="section-title">Proč Šepot?</h2>
+                <p class="section-desc" style="max-width: 700px;">
+                    Šepot vznikl jako experiment v oblasti soukromé komunikace. Chtěli jsme vytvořit messenger,
+                    kde máte plnou kontrolu nad svými daty. Projekt je open source a aktivně se vyvíjí.
+                </p>
+                <div style="margin-top: 40px; display: flex; gap: 48px; flex-wrap: wrap;">
+                    <div>
+                        <div style="font-size: 14px; color: var(--text-muted); margin-bottom: 4px;">Platforma</div>
+                        <div style="font-weight: 600;">iOS, Android, Desktop</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 14px; color: var(--text-muted); margin-bottom: 4px;">Backend</div>
+                        <div style="font-weight: 600;">Rust</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 14px; color: var(--text-muted); margin-bottom: 4px;">Mobilní app</div>
+                        <div style="font-weight: 600;">Flutter</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 14px; color: var(--text-muted); margin-bottom: 4px;">Licence</div>
+                        <div style="font-weight: 600;">MIT</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="preview" id="preview">
+        <div class="container">
+            <div class="preview-content">
+                <div class="preview-text">
+                    <div class="preview-badge">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+                        </svg>
+                        Ve vývoji - Brzy spustíme!
+                    </div>
+                    <h2 class="section-title">Podívejte se na reálnou aplikaci</h2>
+                    <p class="section-desc">Aktivně pracujeme na finální verzi. Tady vidíte reálný screenshot z vývoje.</p>
+
+                    <div class="booking-box">
+                        <h3 class="booking-title">Zarezervujte si konzultaci</h3>
+                        <p class="booking-subtitle">Probereme možnosti spolupráce a vlastního nasazení. 30 minut zdarma.</p>
+                        <a href="https://calendly.com/ajtak-it/konzultace" target="_blank" rel="noopener noreferrer" class="booking-btn">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                <line x1="16" y1="2" x2="16" y2="6"/>
+                                <line x1="8" y1="2" x2="8" y2="6"/>
+                                <line x1="3" y1="10" x2="21" y2="10"/>
+                            </svg>
+                            Rezervovat termín
+                        </a>
+                    </div>
+                </div>
+                <div class="preview-phone">
+                    <div class="preview-phone-frame">
+                        <div class="preview-phone-screen">
+                            <img src="screenshots/sepot-screen1.png" alt="Sepot - Welcome screen">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="download" id="download">
+        <div class="container">
+            <div class="download-content">
+                <div class="section-label">Stáhnout</div>
+                <h2 class="section-title">Začněte komunikovat bezpečně</h2>
+                <p class="section-desc">Šepot je zdarma pro iOS, Android i desktop. Žádné reklamy, žádné poplatky, navždy.</p>
+                <div class="download-buttons">
+                    <a href="#" class="store-btn">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+                        </svg>
+                        <div class="store-btn-text">
+                            <span class="store-btn-label">Stáhnout z</span>
+                            <span class="store-btn-name">App Store</span>
+                        </div>
+                    </a>
+                    <a href="#" class="store-btn">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.53,12.9 20.18,13.18L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z"/>
+                        </svg>
+                        <div class="store-btn-text">
+                            <span class="store-btn-label">Stáhnout z</span>
+                            <span class="store-btn-name">Google Play</span>
+                        </div>
+                    </a>
+                    <a href="#" class="store-btn">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M3 12V6.75L9 5.43V11.91L3 12M20 3V11.75L10 11.9V5.21L20 3M3 13L9 13.09V19.9L3 18.75V13M20 13.25V22L10 20.09V13.1L20 13.25Z"/>
+                        </svg>
+                        <div class="store-btn-text">
+                            <span class="store-btn-label">Stáhnout pro</span>
+                            <span class="store-btn-name">Windows</span>
+                        </div>
+                    </a>
+                </div>
+                <p class="download-note">K dispozici také pro macOS a Linux</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <a href="#" class="logo">
+                        <div class="logo-icon">
+                            <img src="logo-64.png" alt="Šepot logo">
+                        </div>
+                        Šepot
+                    </a>
+                    <p>Soukromý messenger s E2E šifrováním. Vytvořeno v Česku.</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-col">
+                        <h4>Produkt</h4>
+                        <ul>
+                            <li><a href="#features">Funkce</a></li>
+                            <li><a href="#security">Bezpečnost</a></li>
+                            <li><a href="#download">Stáhnout</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-col">
+                        <h4>Více</h4>
+                        <ul>
+                            <li><a href="https://ajtak.it" target="_blank" rel="noopener noreferrer">ajtak.it</a></li>
+                            <li><a href="#">Dokumentace</a></li>
+                            <li><a href="#">FAQ</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-col">
+                        <h4>Právní</h4>
+                        <ul>
+                            <li><a href="#">Ochrana soukromí</a></li>
+                            <li><a href="#">Podmínky užití</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>2025 Sepot. Projekt od <a href="https://ajtak.it" target="_blank" style="color: var(--text-secondary);">ajtak.it</a> | ICO: 24409979</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

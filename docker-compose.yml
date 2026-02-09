@@ -1,0 +1,15 @@
+services:
+  sepot:
+    build: .
+    container_name: sepot-web
+    restart: unless-stopped
+    ports:
+      - "3110:3000"
+    environment:
+      - NODE_ENV=production
+      - NTFY_URL=${NTFY_URL}
+      - SMTP_HOST=${SMTP_HOST}
+      - SMTP_PORT=${SMTP_PORT}
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_PASS=${SMTP_PASS}
+      - SMTP_TO=${SMTP_TO}

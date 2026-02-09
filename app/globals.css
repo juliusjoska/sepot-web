@@ -1,0 +1,132 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html { scroll-behavior: smooth; }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: 'ss01', 'ss02', 'cv01';
+  }
+  ::selection {
+    @apply bg-accent/30 text-white;
+  }
+}
+
+@layer components {
+  .section {
+    @apply py-20 md:py-28;
+  }
+
+  .heading-1 {
+    @apply text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.05];
+  }
+  .heading-2 {
+    @apply text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight leading-tight;
+  }
+  .heading-3 {
+    @apply text-lg md:text-xl font-semibold;
+  }
+
+  /* Gradients */
+  .text-gradient {
+    @apply bg-gradient-to-r from-accent-light via-accent to-cyan bg-clip-text text-transparent;
+  }
+  .text-gradient-warm {
+    @apply bg-gradient-to-r from-lime-light via-accent-light to-cyan-light bg-clip-text text-transparent;
+  }
+  .text-gradient-cool {
+    @apply bg-gradient-to-r from-cyan-light via-accent-light to-lime bg-clip-text text-transparent;
+  }
+
+  /* Buttons */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl
+           bg-gradient-to-r from-accent to-accent-dark
+           text-white font-semibold text-sm
+           shadow-lg shadow-accent/25
+           hover:shadow-accent/40 hover:brightness-110
+           transition-all duration-300;
+  }
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl
+           border border-border bg-white/[0.03]
+           text-foreground font-semibold text-sm
+           hover:border-accent/50 hover:bg-accent/5
+           transition-all duration-300;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg
+           text-muted font-medium text-sm
+           hover:text-foreground hover:bg-white/[0.05]
+           transition-all duration-300;
+  }
+
+  /* Cards */
+  .card-hover {
+    @apply rounded-2xl border border-border bg-background-secondary/50
+           p-6 md:p-7 backdrop-blur-sm
+           hover:border-accent/30 hover:bg-white/[0.03]
+           transition-all duration-300;
+  }
+  .card-glass {
+    @apply rounded-2xl border border-white/[0.06] bg-white/[0.02]
+           backdrop-blur-xl p-6;
+  }
+  .gradient-border {
+    @apply relative rounded-2xl p-6 md:p-7 overflow-hidden;
+    background: linear-gradient(135deg, rgba(16,185,129,0.05), rgba(6,182,212,0.05));
+  }
+  .gradient-border::before {
+    content: '';
+    @apply absolute inset-0 rounded-2xl;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(16,185,129,0.4), rgba(6,182,212,0.4));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  /* Backgrounds */
+  .mesh-gradient {
+    background:
+      radial-gradient(ellipse 60% 50% at 20% 40%, rgba(16,185,129,0.08) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 60% at 80% 60%, rgba(6,182,212,0.06) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 40% at 50% 10%, rgba(132,204,22,0.04) 0%, transparent 70%);
+  }
+  .grid-pattern {
+    background-image:
+      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  /* Terminal / crypto code look */
+  .terminal {
+    @apply rounded-2xl border border-border bg-background-secondary overflow-hidden font-mono;
+  }
+  .terminal-header {
+    @apply flex items-center gap-1.5 px-4 py-2.5 border-b border-border bg-background-tertiary/50;
+  }
+  .terminal-dot {
+    @apply w-3 h-3 rounded-full;
+  }
+
+  /* Phone mockup */
+  .phone-frame {
+    @apply rounded-[2.5rem] bg-gray-900 p-3 shadow-2xl shadow-black/50;
+  }
+  .phone-screen {
+    @apply rounded-[2rem] overflow-hidden bg-background;
+  }
+}
+
+@layer utilities {
+  .glow-green {
+    box-shadow: 0 0 40px rgba(16,185,129,0.15), 0 0 80px rgba(16,185,129,0.05);
+  }
+  .glow-cyan {
+    box-shadow: 0 0 40px rgba(6,182,212,0.15), 0 0 80px rgba(6,182,212,0.05);
+  }
+}

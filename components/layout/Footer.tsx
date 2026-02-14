@@ -100,11 +100,14 @@ export default function Footer() {
       <div className="border-t border-border">
         <div className="container py-6 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-xs text-muted/60">
-            &copy; 2026 Šepot. Projekt od{' '}
-            <a href="https://ajtak.it" target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors">
+            &copy; {new Date().getFullYear()} Šepot. Vytvořil{' '}
+            <a href="https://juliusjoska.cz" target="_blank" rel="noopener" className="hover:text-foreground transition-colors">
+              Julius Joska
+            </a>
+            {' | '}
+            <a href="https://ajtak.it" target="_blank" rel="noopener" className="hover:text-foreground transition-colors">
               ajtak.it
-            </a>{' '}
-            | IČO: 24409979
+            </a>
           </p>
           <div className="flex items-center gap-4">
             <a

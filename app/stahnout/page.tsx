@@ -2,11 +2,10 @@
 
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import Image from 'next/image'
 import {
-  Download, Smartphone, Monitor, Terminal, Globe,
+  Download, Smartphone, Terminal, Globe,
   ArrowRight, Shield, Clock, Github, Apple,
-  CheckCircle2, AlertCircle
+  CheckCircle2, AlertCircle, Bell, Code2
 } from 'lucide-react'
 
 const fadeUp = {
@@ -41,10 +40,10 @@ const platforms = [
   {
     name: 'Desktop CLI',
     icon: Terminal,
-    status: 'available' as const,
+    status: 'source' as const,
     desc: 'Rust CLI klient pro Linux, macOS, Windows',
-    action: 'Stáhnout z GitHubu',
-    link: 'https://github.com/juliusjoska/sepot/releases',
+    action: 'Zdrojový kód na GitHubu',
+    link: 'https://github.com/juliusjoska/sepot',
     color: 'text-accent',
     bgColor: 'bg-accent/10',
     borderColor: 'border-accent/20',
@@ -52,10 +51,9 @@ const platforms = [
   {
     name: 'Web klient',
     icon: Globe,
-    status: 'planned' as const,
+    status: 'soon' as const,
     desc: 'Webový klient přímo v prohlížeči',
     action: 'Ve vývoji',
-    link: '/app',
     color: 'text-violet-400',
     bgColor: 'bg-violet-400/10',
     borderColor: 'border-violet-400/20',
@@ -63,10 +61,10 @@ const platforms = [
 ]
 
 const cliSteps = [
-  { step: '1', cmd: 'cargo install sepot', desc: 'Instalace přes Cargo' },
-  { step: '2', cmd: 'sepot init', desc: 'Inicializace a vytvoření klíčů' },
-  { step: '3', cmd: 'sepot register --username alice', desc: 'Registrace na server' },
-  { step: '4', cmd: 'sepot chat bob', desc: 'Začněte konverzaci' },
+  { step: '1', cmd: 'git clone https://github.com/juliusjoska/sepot.git', desc: 'Stáhněte zdrojový kód' },
+  { step: '2', cmd: 'cd sepot && cargo build --release', desc: 'Zkompilujte pomocí Rust toolchainu' },
+  { step: '3', cmd: './target/release/sepot init', desc: 'Inicializace a vytvoření klíčů' },
+  { step: '4', cmd: './target/release/sepot register --username alice', desc: 'Registrace a začněte komunikovat' },
 ]
 
 export default function StahnoutPage() {
@@ -83,8 +81,8 @@ export default function StahnoutPage() {
           >
             <AlertCircle size={18} className="text-cyan shrink-0" />
             <p className="text-foreground/80">
-              <strong className="text-cyan">Ve vývoji</strong> -- Šepot je aktivně vyvíjen. Mobilní aplikace budou brzy dostupné.
-              CLI klient je k dispozici pro testování.
+              <strong className="text-cyan">Ve vývoji</strong> — Šepot je aktivně vyvíjen. Mobilní aplikace a předkompilované binárky budou brzy dostupné.
+              Prozatím je k dispozici zdrojový kód CLI klienta.
             </p>
           </motion.div>
         </div>
@@ -114,22 +112,13 @@ export default function StahnoutPage() {
             {platforms.map((platform, i) => (
               <motion.div
                 key={platform.name}
-                className={`card-hover group ${platform.borderColor} border relative ${
-                  platform.status === 'available' ? 'ring-1 ring-accent/30' : ''
-                }`}
+                className={`card-hover group ${platform.borderColor} border relative`}
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
                 variants={fadeUp}
                 custom={i}
               >
-                {platform.status === 'available' && (
-                  <div className="absolute -top-2.5 left-4">
-                    <span className="px-2.5 py-0.5 rounded-full bg-accent text-white text-xs font-medium shadow-lg shadow-accent/30">
-                      Dostupné
-                    </span>
-                  </div>
-                )}
                 <div className="flex items-center gap-4 mb-4">
                   <div className={`w-14 h-14 rounded-xl ${platform.bgColor} ${platform.borderColor} border flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}>
                     <platform.icon size={28} className={platform.color} />
@@ -140,26 +129,22 @@ export default function StahnoutPage() {
                   </div>
                 </div>
 
-                {platform.status === 'available' && platform.link ? (
+                {platform.status === 'source' && platform.link ? (
                   <a
                     href={platform.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="btn-primary w-full text-center text-sm"
+                    className="flex items-center gap-2 justify-center py-2.5 rounded-xl bg-accent/10 border border-accent/30 text-sm text-accent hover:bg-accent/20 transition-all"
                   >
-                    {platform.action} <ArrowRight size={14} />
+                    <Code2 size={14} /> {platform.action} <ArrowRight size={14} />
                   </a>
-                ) : platform.status === 'planned' && platform.link ? (
+                ) : platform.status === 'soon' ? (
                   <Link
-                    href={platform.link}
+                    href="/demo"
                     className="flex items-center gap-2 justify-center py-2.5 rounded-xl bg-white/[0.03] border border-border text-sm text-muted hover:text-accent hover:border-accent/30 transition-all"
                   >
-                    <Globe size={14} /> {platform.action} -- Náhled
+                    <Bell size={14} /> Zapsat se na čekací listinu
                   </Link>
-                ) : platform.status === 'soon' ? (
-                  <div className="flex items-center gap-2 justify-center py-2.5 rounded-xl bg-white/[0.03] border border-border text-sm text-muted">
-                    <Clock size={14} /> {platform.action}
-                  </div>
                 ) : (
                   <div className="flex items-center gap-2 justify-center py-2.5 rounded-xl bg-white/[0.03] border border-border text-sm text-muted/60">
                     <Clock size={14} /> {platform.action}
@@ -171,50 +156,14 @@ export default function StahnoutPage() {
         </div>
       </section>
 
-      {/* Screenshot */}
-      <section className="py-12 md:py-16 bg-background-secondary/30">
-        <div className="container">
-          <motion.div
-            className="text-center mb-10"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeUp}
-            custom={0}
-          >
-            <h2 className="heading-2 mb-4">Jak to <span className="text-gradient">vypadá</span></h2>
-          </motion.div>
-
-          <motion.div
-            className="max-w-2xl mx-auto"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={fadeUp}
-            custom={1}
-          >
-            <div className="phone-frame mx-auto max-w-[300px]">
-              <div className="phone-screen relative aspect-[9/19]">
-                <Image
-                  src="/screenshots/sepot-screen1.png"
-                  alt="Šepot -- ukázka aplikace"
-                  fill
-                  className="object-cover"
-                  sizes="300px"
-                />
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
       {/* CLI Install */}
       <section className="section">
         <div className="container">
           <motion.div className="text-center mb-10" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={0}>
-            <h2 className="heading-2 mb-4">Instalace <span className="text-gradient">CLI klienta</span></h2>
+            <h2 className="heading-2 mb-4">Kompilace <span className="text-gradient">ze zdrojového kódu</span></h2>
             <p className="text-muted max-w-xl mx-auto">
               Pro nadšence a vývojáře. CLI klient funguje v terminálu na všech hlavních platformách.
+              Potřebujete <a href="https://rustup.rs" target="_blank" rel="noopener noreferrer" className="text-accent hover:underline">Rust toolchain</a>.
             </p>
           </motion.div>
 
@@ -260,9 +209,9 @@ export default function StahnoutPage() {
             <h3 className="heading-3 mb-4">Systémové požadavky</h3>
             <div className="grid sm:grid-cols-2 gap-4 text-sm">
               <div>
-                <p className="text-muted text-xs uppercase tracking-wide mb-2">CLI klient</p>
+                <p className="text-muted text-xs uppercase tracking-wide mb-2">CLI klient (kompilace ze zdrojů)</p>
                 <ul className="space-y-1.5">
-                  {['Linux (x64, ARM64)', 'macOS 12+ (Intel, Apple Silicon)', 'Windows 10/11 (x64)', 'Rust 1.75+ (pro kompilaci ze zdrojů)'].map((req) => (
+                  {['Linux (x64, ARM64)', 'macOS 12+ (Intel, Apple Silicon)', 'Windows 10/11 (x64)', 'Rust 1.75+ (rustup.rs)'].map((req) => (
                     <li key={req} className="flex items-center gap-2 text-foreground/70">
                       <CheckCircle2 size={13} className="text-accent shrink-0" /> {req}
                     </li>
@@ -270,7 +219,7 @@ export default function StahnoutPage() {
                 </ul>
               </div>
               <div>
-                <p className="text-muted text-xs uppercase tracking-wide mb-2">Mobilní (připravuje se)</p>
+                <p className="text-muted text-xs uppercase tracking-wide mb-2">Mobilní aplikace (připravuje se)</p>
                 <ul className="space-y-1.5">
                   {['Android 8.0+ (API 26)', 'iOS 15+', 'Min. 100 MB volného místa', 'Internetové připojení'].map((req) => (
                     <li key={req} className="flex items-center gap-2 text-foreground/70">

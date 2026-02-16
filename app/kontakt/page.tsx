@@ -7,7 +7,7 @@ import Link from 'next/link'
 import {
   Mail, User, MessageSquare, Send, ArrowRight,
   CheckCircle2, AlertCircle, Loader2, Github,
-  ExternalLink, FileText
+  ExternalLink, FileText, Shield
 } from 'lucide-react'
 
 const fadeUp = {
@@ -31,6 +31,9 @@ const contactInfo = [
     label: 'E-mail',
     value: 'info@sepot.cz',
     href: 'mailto:info@sepot.cz',
+    color: 'text-accent',
+    bgColor: 'bg-accent/10',
+    borderColor: 'border-accent/20',
   },
   {
     icon: Github,
@@ -38,6 +41,9 @@ const contactInfo = [
     value: 'juliusjoska/sepot',
     href: 'https://github.com/juliusjoska/sepot',
     external: true,
+    color: 'text-cyan',
+    bgColor: 'bg-cyan/10',
+    borderColor: 'border-cyan/20',
   },
   {
     icon: ExternalLink,
@@ -45,6 +51,9 @@ const contactInfo = [
     value: 'ajtak.it',
     href: 'https://ajtak.it',
     external: true,
+    color: 'text-lime',
+    bgColor: 'bg-lime/10',
+    borderColor: 'border-lime/20',
   },
 ]
 
@@ -93,7 +102,7 @@ export default function KontaktPage() {
   return (
     <div className="mesh-gradient grid-pattern min-h-screen">
       {/* Hero */}
-      <section className="section pb-12">
+      <section className="section pb-12 aurora-bg">
         <div className="container text-center">
           <motion.div initial="hidden" animate="visible" variants={fadeUp} custom={0}>
             <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/10 border border-accent/20 text-accent text-sm font-medium mb-6">
@@ -101,7 +110,7 @@ export default function KontaktPage() {
             </span>
           </motion.div>
           <motion.h1 className="heading-1 mb-6" initial="hidden" animate="visible" variants={fadeUp} custom={1}>
-            Napište <span className="text-gradient">nám</span>
+            Napište <span className="text-shimmer">nám</span>
           </motion.h1>
           <motion.p className="text-lg text-muted max-w-2xl mx-auto" initial="hidden" animate="visible" variants={fadeUp} custom={2}>
             Máte dotaz, nápad nebo jste našli chybu? Ozvěte se nám.
@@ -294,8 +303,8 @@ export default function KontaktPage() {
                   rel={info.external ? 'noopener noreferrer' : undefined}
                   className="card-hover flex items-center gap-4 group"
                 >
-                  <div className="w-10 h-10 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center shrink-0 group-hover:bg-accent/20 transition-colors">
-                    <info.icon size={18} className="text-accent" />
+                  <div className={`w-10 h-10 rounded-xl ${info.bgColor} ${info.borderColor} border flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300`}>
+                    <info.icon size={18} className={info.color} />
                   </div>
                   <div>
                     <p className="text-xs text-muted">{info.label}</p>
@@ -306,8 +315,11 @@ export default function KontaktPage() {
                 </a>
               ))}
 
-              <div className="card-hover mt-6">
-                <p className="text-xs text-muted mb-2">Bezpečnostní hlášení</p>
+              <div className="card-hover mt-6 border-yellow-500/20 border">
+                <div className="flex items-center gap-2 mb-2">
+                  <Shield size={16} className="text-yellow-400" />
+                  <p className="text-xs font-medium text-yellow-400 uppercase tracking-wide">Bezpečnostní hlášení</p>
+                </div>
                 <p className="text-sm text-foreground/70 mb-3">
                   Našli jste bezpečnostní zranitelnost? Prosím kontaktujte nás přímo
                   na e-mail s předmětem &quot;Security&quot;.

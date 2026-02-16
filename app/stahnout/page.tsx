@@ -5,7 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import {
   Download, Smartphone, Monitor, Terminal, Globe,
-  ArrowRight, Shield, Clock, Github, Apple, ExternalLink,
+  ArrowRight, Shield, Clock, Github, Apple,
   CheckCircle2, AlertCircle
 } from 'lucide-react'
 
@@ -50,14 +50,15 @@ const platforms = [
     borderColor: 'border-accent/20',
   },
   {
-    name: 'Web',
+    name: 'Web klient',
     icon: Globe,
     status: 'planned' as const,
-    desc: 'Webový klient v prohlížeči',
-    action: 'Plánováno',
-    color: 'text-muted',
-    bgColor: 'bg-white/5',
-    borderColor: 'border-border',
+    desc: 'Webový klient přímo v prohlížeči',
+    action: 'Ve vývoji',
+    link: '/app',
+    color: 'text-violet-400',
+    bgColor: 'bg-violet-400/10',
+    borderColor: 'border-violet-400/20',
   },
 ]
 
@@ -90,7 +91,7 @@ export default function StahnoutPage() {
       </section>
 
       {/* Hero */}
-      <section className="section pb-12">
+      <section className="section pb-12 aurora-bg">
         <div className="container text-center">
           <motion.div initial="hidden" animate="visible" variants={fadeUp} custom={0}>
             <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/10 border border-accent/20 text-accent text-sm font-medium mb-6">
@@ -98,7 +99,7 @@ export default function StahnoutPage() {
             </span>
           </motion.div>
           <motion.h1 className="heading-1 mb-6" initial="hidden" animate="visible" variants={fadeUp} custom={1}>
-            Získejte <span className="text-gradient">Šepot</span>
+            Získejte <span className="text-shimmer">Šepot</span>
           </motion.h1>
           <motion.p className="text-lg text-muted max-w-2xl mx-auto" initial="hidden" animate="visible" variants={fadeUp} custom={2}>
             Vyberte si svou platformu. Šepot je zdarma, open source a navždy bez reklam.
@@ -113,7 +114,7 @@ export default function StahnoutPage() {
             {platforms.map((platform, i) => (
               <motion.div
                 key={platform.name}
-                className={`card-hover ${platform.borderColor} border relative ${
+                className={`card-hover group ${platform.borderColor} border relative ${
                   platform.status === 'available' ? 'ring-1 ring-accent/30' : ''
                 }`}
                 initial="hidden"
@@ -124,17 +125,17 @@ export default function StahnoutPage() {
               >
                 {platform.status === 'available' && (
                   <div className="absolute -top-2.5 left-4">
-                    <span className="px-2.5 py-0.5 rounded-full bg-accent text-white text-xs font-medium">
+                    <span className="px-2.5 py-0.5 rounded-full bg-accent text-white text-xs font-medium shadow-lg shadow-accent/30">
                       Dostupné
                     </span>
                   </div>
                 )}
                 <div className="flex items-center gap-4 mb-4">
-                  <div className={`w-14 h-14 rounded-xl ${platform.bgColor} ${platform.borderColor} border flex items-center justify-center`}>
+                  <div className={`w-14 h-14 rounded-xl ${platform.bgColor} ${platform.borderColor} border flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}>
                     <platform.icon size={28} className={platform.color} />
                   </div>
                   <div>
-                    <h3 className="heading-3">{platform.name}</h3>
+                    <h3 className="heading-3 group-hover:text-accent transition-colors">{platform.name}</h3>
                     <p className="text-xs text-muted">{platform.desc}</p>
                   </div>
                 </div>
@@ -148,6 +149,13 @@ export default function StahnoutPage() {
                   >
                     {platform.action} <ArrowRight size={14} />
                   </a>
+                ) : platform.status === 'planned' && platform.link ? (
+                  <Link
+                    href={platform.link}
+                    className="flex items-center gap-2 justify-center py-2.5 rounded-xl bg-white/[0.03] border border-border text-sm text-muted hover:text-accent hover:border-accent/30 transition-all"
+                  >
+                    <Globe size={14} /> {platform.action} -- Náhled
+                  </Link>
                 ) : platform.status === 'soon' ? (
                   <div className="flex items-center gap-2 justify-center py-2.5 rounded-xl bg-white/[0.03] border border-border text-sm text-muted">
                     <Clock size={14} /> {platform.action}
@@ -214,18 +222,18 @@ export default function StahnoutPage() {
             {cliSteps.map((step, i) => (
               <motion.div
                 key={step.step}
-                className="flex items-start gap-4"
+                className="flex items-start gap-4 group"
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
                 variants={fadeUp}
                 custom={i}
               >
-                <div className="w-8 h-8 rounded-full bg-accent/20 border border-accent/30 flex items-center justify-center shrink-0 text-accent font-mono text-sm font-bold">
+                <div className="w-8 h-8 rounded-full bg-accent/20 border border-accent/30 flex items-center justify-center shrink-0 text-accent font-mono text-sm font-bold group-hover:bg-accent/30 transition-colors">
                   {step.step}
                 </div>
                 <div className="flex-1">
-                  <div className="terminal">
+                  <div className="terminal group-hover:border-accent/30 transition-colors">
                     <div className="px-4 py-2.5 text-sm font-mono">
                       <span className="text-accent">$</span> <span className="text-foreground/90">{step.cmd}</span>
                     </div>
@@ -277,7 +285,7 @@ export default function StahnoutPage() {
       </section>
 
       {/* CTA */}
-      <section className="section">
+      <section className="section aurora-bg">
         <div className="container text-center">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={0}>
             <h2 className="heading-2 mb-4">Nechcete čekat?</h2>

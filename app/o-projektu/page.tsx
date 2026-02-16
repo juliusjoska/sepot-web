@@ -85,21 +85,25 @@ const values = [
     icon: Shield,
     title: 'Soukromí na prvním místě',
     desc: 'Každé architektonické rozhodnutí děláme s ohledem na soukromí uživatele. Žádné kompromisy kvůli pohodlí nebo monetizaci.',
+    color: 'text-accent',
   },
   {
     icon: Code,
     title: 'Transparentnost',
     desc: 'Kompletně otevřený zdrojový kód. Klient i server. Kdokoliv může ověřit, že děláme to, co říkáme.',
+    color: 'text-cyan',
   },
   {
     icon: Target,
     title: 'Bezpečnost ověřená praxí',
     desc: 'Používáme osvědčené kryptografické algoritmy. Žádné vlastní vynálezy, žádná security through obscurity.',
+    color: 'text-lime',
   },
   {
     icon: Heart,
     title: 'Komunita',
     desc: 'Šepot je projekt komunity. Vítáme příspěvky, nápady a konstruktivní kritiku od kohokoliv.',
+    color: 'text-rose-400',
   },
 ]
 
@@ -107,7 +111,7 @@ export default function OProjektuPage() {
   return (
     <div className="mesh-gradient grid-pattern min-h-screen">
       {/* Hero */}
-      <section className="section pb-12">
+      <section className="section pb-12 aurora-bg">
         <div className="container text-center">
           <motion.div initial="hidden" animate="visible" variants={fadeUp} custom={0}>
             <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/10 border border-accent/20 text-accent text-sm font-medium mb-6">
@@ -115,7 +119,7 @@ export default function OProjektuPage() {
             </span>
           </motion.div>
           <motion.h1 className="heading-1 mb-6" initial="hidden" animate="visible" variants={fadeUp} custom={1}>
-            Soukromí <span className="text-gradient">pro každého</span>
+            Soukromí <span className="text-shimmer">pro každého</span>
           </motion.h1>
           <motion.p className="text-lg text-muted max-w-2xl mx-auto" initial="hidden" animate="visible" variants={fadeUp} custom={2}>
             Šepot vznikl z přesvědčení, že soukromá komunikace je základní lidské právo.
@@ -125,7 +129,7 @@ export default function OProjektuPage() {
       </section>
 
       {/* Vision */}
-      <section className="py-12 md:py-16 bg-background-secondary/30">
+      <section className="py-16 md:py-20 bg-background-secondary/30">
         <div className="container">
           <motion.div className="grid md:grid-cols-2 gap-10 items-center" initial="hidden" whileInView="visible" viewport={{ once: true }}>
             <motion.div variants={fadeUp} custom={0}>
@@ -182,15 +186,17 @@ export default function OProjektuPage() {
             {values.map((val, i) => (
               <motion.div
                 key={val.title}
-                className="card-hover"
+                className="card-hover group"
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
                 variants={fadeUp}
                 custom={i}
               >
-                <val.icon size={24} className="text-accent mb-3" />
-                <h3 className="heading-3 mb-2">{val.title}</h3>
+                <div className="w-12 h-12 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center mb-4 shadow-lg shadow-accent/5 group-hover:scale-110 transition-transform duration-300">
+                  <val.icon size={24} className={val.color} />
+                </div>
+                <h3 className="heading-3 mb-2 group-hover:text-accent transition-colors">{val.title}</h3>
                 <p className="text-sm text-muted">{val.desc}</p>
               </motion.div>
             ))}
@@ -199,16 +205,16 @@ export default function OProjektuPage() {
       </section>
 
       {/* Team */}
-      <section className="py-12 md:py-16 bg-background-secondary/30">
+      <section className="py-16 md:py-20 bg-background-secondary/30">
         <div className="container">
           <motion.div className="grid md:grid-cols-2 gap-10 items-center" initial="hidden" whileInView="visible" viewport={{ once: true }}>
             <motion.div variants={fadeUp} custom={0}>
-              <h2 className="heading-2 mb-4">Kdo za tím <span className="text-gradient">stojí</span></h2>
+              <h2 className="heading-2 mb-6">Kdo za tím <span className="text-gradient">stojí</span></h2>
               <div className="space-y-4">
-                <div className="card-hover">
+                <div className="card-hover group">
                   <div className="flex items-center gap-4 mb-3">
-                    <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center">
-                      <Users size={22} className="text-accent" />
+                    <div className="w-14 h-14 rounded-2xl bg-accent/20 border border-accent/30 flex items-center justify-center shadow-lg shadow-accent/10 group-hover:scale-105 transition-transform">
+                      <Users size={24} className="text-accent" />
                     </div>
                     <div>
                       <h3 className="font-semibold">Julius Joska</h3>
@@ -221,10 +227,10 @@ export default function OProjektuPage() {
                   </p>
                 </div>
 
-                <div className="card-hover">
+                <div className="card-hover group">
                   <div className="flex items-center gap-4 mb-3">
-                    <div className="w-12 h-12 rounded-full bg-cyan/20 flex items-center justify-center">
-                      <Globe size={22} className="text-cyan" />
+                    <div className="w-14 h-14 rounded-2xl bg-cyan/20 border border-cyan/30 flex items-center justify-center shadow-lg shadow-cyan/10 group-hover:scale-105 transition-transform">
+                      <Globe size={24} className="text-cyan" />
                     </div>
                     <div>
                       <h3 className="font-semibold">ajtak.it</h3>
@@ -249,12 +255,19 @@ export default function OProjektuPage() {
 
             <motion.div variants={fadeUp} custom={1}>
               <div className="grid grid-cols-2 gap-4">
-                {stats.map((stat) => (
-                  <div key={stat.label} className="card-hover text-center">
-                    <stat.icon size={24} className="text-accent mx-auto mb-2" />
+                {stats.map((stat, i) => (
+                  <motion.div
+                    key={stat.label}
+                    className="card-hover text-center group"
+                    whileHover={{ y: -4 }}
+                    transition={{ type: 'spring', stiffness: 300 }}
+                  >
+                    <div className="w-10 h-10 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform duration-300">
+                      <stat.icon size={20} className="text-accent" />
+                    </div>
                     <p className="font-semibold text-sm">{stat.value}</p>
                     <p className="text-xs text-muted">{stat.label}</p>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
             </motion.div>
@@ -272,70 +285,89 @@ export default function OProjektuPage() {
             </p>
           </motion.div>
 
-          <div className="space-y-6 max-w-3xl mx-auto">
-            {phases.map((phase, i) => (
-              <motion.div
-                key={phase.phase}
-                className={`card-hover relative ${
-                  phase.status === 'active' ? 'border-accent/40' : ''
-                }`}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                variants={fadeUp}
-                custom={i}
-              >
-                <div className="flex items-center gap-3 mb-4">
-                  <span className={`px-2.5 py-0.5 rounded-md text-xs font-medium ${
+          {/* Vizuální timeline */}
+          <div className="max-w-3xl mx-auto relative">
+            {/* Svislá čára */}
+            <div className="absolute left-6 md:left-8 top-0 bottom-0 w-px bg-gradient-to-b from-accent via-cyan to-border" />
+
+            <div className="space-y-8">
+              {phases.map((phase, i) => (
+                <motion.div
+                  key={phase.phase}
+                  className="relative pl-16 md:pl-20"
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true }}
+                  variants={fadeUp}
+                  custom={i}
+                >
+                  {/* Tečka na timeline */}
+                  <div className={`absolute left-4 md:left-6 w-4 h-4 rounded-full border-2 ${
                     phase.status === 'done'
-                      ? 'bg-accent/10 text-accent border border-accent/20'
+                      ? 'bg-accent border-accent shadow-lg shadow-accent/30'
                       : phase.status === 'active'
-                      ? 'bg-cyan/10 text-cyan border border-cyan/20'
-                      : 'bg-white/5 text-muted border border-border'
+                      ? 'bg-cyan border-cyan shadow-lg shadow-cyan/30 animate-pulse'
+                      : 'bg-background border-border'
+                  }`} />
+
+                  <div className={`card-hover ${
+                    phase.status === 'active' ? 'border-cyan/30 border' : ''
                   }`}>
-                    {phase.phase}
-                  </span>
-                  <h3 className="heading-3">{phase.title}</h3>
-                  {phase.status === 'done' && (
-                    <span className="ml-auto flex items-center gap-1 text-xs text-accent">
-                      <Check size={14} /> Hotovo
-                    </span>
-                  )}
-                  {phase.status === 'active' && (
-                    <span className="ml-auto flex items-center gap-1 text-xs text-cyan">
-                      <Clock size={14} /> Probíhá
-                    </span>
-                  )}
-                  {phase.status === 'planned' && (
-                    <span className="ml-auto flex items-center gap-1 text-xs text-muted">
-                      <Clock size={14} /> Plánováno
-                    </span>
-                  )}
-                </div>
-                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  {phase.items.map((item) => (
-                    <li key={item} className="flex items-start gap-2 text-sm text-foreground/70">
-                      {phase.status === 'done' ? (
-                        <Check size={14} className="text-accent mt-0.5 shrink-0" />
-                      ) : (
-                        <div className="w-3.5 h-3.5 rounded-full border border-border mt-0.5 shrink-0" />
+                    <div className="flex items-center gap-3 mb-4">
+                      <span className={`px-2.5 py-0.5 rounded-md text-xs font-medium ${
+                        phase.status === 'done'
+                          ? 'bg-accent/10 text-accent border border-accent/20'
+                          : phase.status === 'active'
+                          ? 'bg-cyan/10 text-cyan border border-cyan/20'
+                          : 'bg-white/5 text-muted border border-border'
+                      }`}>
+                        {phase.phase}
+                      </span>
+                      <h3 className="heading-3">{phase.title}</h3>
+                      {phase.status === 'done' && (
+                        <span className="ml-auto flex items-center gap-1 text-xs text-accent">
+                          <Check size={14} /> Hotovo
+                        </span>
                       )}
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </motion.div>
-            ))}
+                      {phase.status === 'active' && (
+                        <span className="ml-auto flex items-center gap-1 text-xs text-cyan">
+                          <Clock size={14} /> Probíhá
+                        </span>
+                      )}
+                      {phase.status === 'planned' && (
+                        <span className="ml-auto flex items-center gap-1 text-xs text-muted">
+                          <Clock size={14} /> Plánováno
+                        </span>
+                      )}
+                    </div>
+                    <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      {phase.items.map((item) => (
+                        <li key={item} className="flex items-start gap-2 text-sm text-foreground/70">
+                          {phase.status === 'done' ? (
+                            <Check size={14} className="text-accent mt-0.5 shrink-0" />
+                          ) : (
+                            <div className="w-3.5 h-3.5 rounded-full border border-border mt-0.5 shrink-0" />
+                          )}
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
       {/* Contribute */}
-      <section className="py-12 md:py-16 bg-background-secondary/30">
+      <section className="py-16 md:py-20 aurora-bg">
         <div className="container text-center">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={0}>
-            <GitBranch size={40} className="text-accent mx-auto mb-4" />
-            <h2 className="heading-2 mb-4">Přispějte k <span className="text-gradient">Šepotu</span></h2>
+            <div className="w-16 h-16 rounded-2xl bg-accent/10 border border-accent/20 flex items-center justify-center mx-auto mb-4 shadow-lg shadow-accent/10">
+              <GitBranch size={32} className="text-accent" />
+            </div>
+            <h2 className="heading-2 mb-4">Přispějte k <span className="text-shimmer">Šepotu</span></h2>
             <p className="text-muted max-w-lg mx-auto mb-8">
               Šepot je open source. Můžete přispět kódem, nahlásit chyby,
               navrhnout funkce nebo pomoci s překladem.

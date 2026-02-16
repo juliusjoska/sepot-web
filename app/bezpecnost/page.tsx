@@ -23,6 +23,7 @@ const algorithms = [
     desc: 'Elliptic Curve Diffie-Hellman na Curve25519. Bezpečná výměna klíčů bez nutnosti sdílet tajemství předem.',
     strength: '128-bit security level',
     icon: Key,
+    glowColor: 'shadow-emerald-500/20',
   },
   {
     name: 'XSalsa20-Poly1305',
@@ -30,6 +31,7 @@ const algorithms = [
     desc: 'Streamová šifra XSalsa20 s autentikací Poly1305 MAC. Rychlá, bezpečná, odolná proti timing útokům.',
     strength: '256-bit klíč, 192-bit nonce',
     icon: Lock,
+    glowColor: 'shadow-cyan-500/20',
   },
   {
     name: 'Ed25519',
@@ -37,6 +39,7 @@ const algorithms = [
     desc: 'EdDSA podpisy na Edwards Curve25519. Ověření identity odesílatele a integrity zprávy.',
     strength: '128-bit security level',
     icon: Fingerprint,
+    glowColor: 'shadow-lime-500/20',
   },
   {
     name: 'Argon2id',
@@ -44,6 +47,7 @@ const algorithms = [
     desc: 'Paměťově náročná funkce pro odvození šifrovacího klíče z hesla. Odolná proti GPU a ASIC útokům.',
     strength: '64 MB RAM, 3 iterace',
     icon: Shield,
+    glowColor: 'shadow-violet-500/20',
   },
   {
     name: 'BLAKE2b',
@@ -51,6 +55,7 @@ const algorithms = [
     desc: 'Kryptografická hash funkce. Rychlejší než SHA-3, používaná pro integrity kontrolu a key derivation.',
     strength: '256-bit výstup',
     icon: FileSearch,
+    glowColor: 'shadow-amber-500/20',
   },
   {
     name: 'Double Ratchet',
@@ -58,6 +63,7 @@ const algorithms = [
     desc: 'Kombinace Diffie-Hellman ratchetu a symetrického ratchetu. Nový klíč pro každou zprávu.',
     strength: 'Perfect Forward Secrecy',
     icon: RefreshCw,
+    glowColor: 'shadow-rose-500/20',
   },
 ]
 
@@ -79,45 +85,55 @@ const threats = [
     title: 'Kompromitovaný server',
     icon: Server,
     desc: 'Server nikdy nevidí dešifrované zprávy. Útočník získá pouze šifrovaná data bez klíčů k dešifrování.',
-    status: 'Ochráněno',
+    status: 'Ochráněno' as const,
   },
   {
     title: 'Man-in-the-middle',
     icon: Eye,
     desc: 'Ověření identity přes QR kódy a bezpečnostní čísla. Jakýkoliv pokus o MITM je detekovatelný.',
-    status: 'Ochráněno',
+    status: 'Ochráněno' as const,
   },
   {
     title: 'Kompromitovaný klíč',
     icon: Key,
     desc: 'Díky PFS kompromitace jednoho klíče neohrozí minulé ani budoucí zprávy. Každá zpráva má unikátní klíč.',
-    status: 'Ochráněno',
+    status: 'Ochráněno' as const,
   },
   {
     title: 'Metadata analýza',
     icon: EyeOff,
     desc: 'Minimální metadata. Server neukládá kdo s kým komunikuje. IP adresy nejsou logovány.',
-    status: 'Ochráněno',
+    status: 'Ochráněno' as const,
   },
   {
     title: 'Brute-force hesla',
     icon: AlertTriangle,
     desc: 'Argon2id s vysokými parametry činí brute-force útoky na hesla prakticky nemožnými.',
-    status: 'Ochráněno',
+    status: 'Ochráněno' as const,
   },
   {
     title: 'Fyzický přístup k zařízení',
     icon: Bug,
     desc: 'Lokální data šifrována pomocí klíče odvozeného z hesla. Bez hesla není přístup k datům.',
-    status: 'Částečně',
+    status: 'Částečně' as const,
   },
+]
+
+/* Vizualizace šifrovacího flow - animované kroky */
+const cryptoSteps = [
+  { step: '01', label: 'Generování klíčů', detail: 'Ed25519 keypair + X25519 prekeys', color: 'text-accent' },
+  { step: '02', label: 'Výměna klíčů (X3DH)', detail: 'Bezpečné navázání konverzace', color: 'text-cyan' },
+  { step: '03', label: 'Double Ratchet', detail: 'Nový klíč pro každou zprávu', color: 'text-lime' },
+  { step: '04', label: 'Šifrování (XSalsa20)', detail: 'Zpráva → šifrovaný text + MAC', color: 'text-accent-light' },
+  { step: '05', label: 'Odeslání přes QUIC', detail: 'Šifrovaný přenos po síti', color: 'text-cyan' },
+  { step: '06', label: 'Dešifrování', detail: 'Pouze příjemce vidí obsah', color: 'text-accent' },
 ]
 
 export default function BezpecnostPage() {
   return (
     <div className="mesh-gradient grid-pattern min-h-screen">
       {/* Hero */}
-      <section className="section pb-12">
+      <section className="section pb-12 aurora-bg">
         <div className="container text-center">
           <motion.div initial="hidden" animate="visible" variants={fadeUp} custom={0}>
             <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/10 border border-accent/20 text-accent text-sm font-medium mb-6">
@@ -125,7 +141,7 @@ export default function BezpecnostPage() {
             </span>
           </motion.div>
           <motion.h1 className="heading-1 mb-6" initial="hidden" animate="visible" variants={fadeUp} custom={1}>
-            Kryptografie <span className="text-gradient">bez kompromisů</span>
+            Kryptografie <span className="text-shimmer">bez kompromisů</span>
           </motion.h1>
           <motion.p className="text-lg text-muted max-w-2xl mx-auto" initial="hidden" animate="visible" variants={fadeUp} custom={2}>
             Šepot používá nejmodernější kryptografické algoritmy. Každý detail je navržen tak,
@@ -134,8 +150,53 @@ export default function BezpecnostPage() {
         </div>
       </section>
 
-      {/* Crypto Flow */}
-      <section className="py-12 md:py-16">
+      {/* Crypto Flow - vizuální kroky */}
+      <section className="py-16 md:py-20">
+        <div className="container">
+          <motion.div
+            className="text-center mb-14"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={fadeUp}
+            custom={0}
+          >
+            <h2 className="heading-2 mb-4">Jak funguje <span className="text-gradient">šifrování</span></h2>
+            <p className="text-muted max-w-xl mx-auto">
+              Od odeslání po doručení -- 6 kroků, které chrání každou zprávu.
+            </p>
+          </motion.div>
+
+          <div className="max-w-4xl mx-auto grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {cryptoSteps.map((s, i) => (
+              <motion.div
+                key={s.step}
+                className="group relative card-hover overflow-hidden"
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                variants={fadeUp}
+                custom={i}
+              >
+                <div className="absolute top-3 right-3 text-3xl font-black text-white/[0.03] leading-none select-none">
+                  {s.step}
+                </div>
+                <div className={`text-xs font-mono font-bold ${s.color} mb-2`}>KROK {s.step}</div>
+                <h3 className="font-semibold text-sm mb-1 group-hover:text-accent transition-colors">{s.label}</h3>
+                <p className="text-xs text-muted">{s.detail}</p>
+                {i < cryptoSteps.length - 1 && (
+                  <div className="hidden lg:block absolute -right-2 top-1/2 -translate-y-1/2 text-border z-10">
+                    <ArrowRight size={14} />
+                  </div>
+                )}
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Terminal Crypto Flow */}
+      <section className="py-12 md:py-16 bg-background-secondary/30">
         <div className="container">
           <motion.div
             className="terminal max-w-3xl mx-auto"
@@ -193,7 +254,7 @@ export default function BezpecnostPage() {
             {algorithms.map((algo, i) => (
               <motion.div
                 key={algo.name}
-                className="card-hover"
+                className={`card-hover group hover:shadow-lg ${algo.glowColor}`}
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
@@ -201,11 +262,11 @@ export default function BezpecnostPage() {
                 custom={i}
               >
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center">
-                    <algo.icon size={20} className="text-accent" />
+                  <div className="w-12 h-12 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center shadow-lg shadow-accent/5 group-hover:scale-110 transition-transform duration-300">
+                    <algo.icon size={22} className="text-accent" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-sm">{algo.name}</h3>
+                    <h3 className="font-semibold text-sm group-hover:text-accent transition-colors">{algo.name}</h3>
                     <p className="text-xs text-muted">{algo.category}</p>
                   </div>
                 </div>
@@ -220,7 +281,7 @@ export default function BezpecnostPage() {
       </section>
 
       {/* PFS Explanation */}
-      <section className="py-12 md:py-16 bg-background-secondary/30">
+      <section className="py-16 md:py-20 bg-background-secondary/30">
         <div className="container">
           <motion.div className="grid md:grid-cols-2 gap-10 items-center" initial="hidden" whileInView="visible" viewport={{ once: true }}>
             <motion.div variants={fadeUp} custom={0}>
@@ -270,8 +331,63 @@ export default function BezpecnostPage() {
         </div>
       </section>
 
-      {/* Signal Comparison */}
+      {/* Zero Knowledge vysvětlení */}
       <section className="section">
+        <div className="container">
+          <motion.div className="text-center mb-14" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={0}>
+            <h2 className="heading-2 mb-4">Zero <span className="text-gradient">Knowledge</span></h2>
+            <p className="text-muted max-w-xl mx-auto">
+              Server nikdy nevidí, co posíláte. Ani my nemůžeme číst vaše zprávy.
+            </p>
+          </motion.div>
+
+          <div className="max-w-3xl mx-auto grid md:grid-cols-3 gap-5">
+            {[
+              {
+                title: 'Co server ví',
+                items: ['Že existuje účet', 'Kdy byl naposledy online', 'Šifrované bloby dat'],
+                color: 'text-cyan',
+                border: 'border-cyan/20',
+              },
+              {
+                title: 'Co server NEVÍ',
+                items: ['Obsah zpráv', 'Kdo s kým komunikuje', 'Kontakty uživatele', 'Obsah souborů'],
+                color: 'text-accent',
+                border: 'border-accent/20',
+              },
+              {
+                title: 'Co nikdo nemůže',
+                items: ['Dešifrovat bez klíče', 'Vydávat se za vás', 'Modifikovat zprávy', 'Číst historii'],
+                color: 'text-lime',
+                border: 'border-lime/20',
+              },
+            ].map((col, i) => (
+              <motion.div
+                key={col.title}
+                className={`card-hover ${col.border} border`}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                variants={fadeUp}
+                custom={i}
+              >
+                <h3 className={`font-semibold text-sm mb-3 ${col.color}`}>{col.title}</h3>
+                <ul className="space-y-2">
+                  {col.items.map((item) => (
+                    <li key={item} className="flex items-start gap-2 text-sm text-foreground/70">
+                      <div className={`w-1.5 h-1.5 rounded-full ${col.color === 'text-accent' ? 'bg-accent' : col.color === 'text-cyan' ? 'bg-cyan' : 'bg-lime'} mt-1.5 shrink-0`} />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Signal Comparison */}
+      <section className="py-16 md:py-20 bg-background-secondary/30">
         <div className="container">
           <motion.div className="text-center mb-14" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={0}>
             <h2 className="heading-2 mb-4">Šepot vs <span className="text-gradient">Signal</span></h2>
@@ -305,7 +421,7 @@ export default function BezpecnostPage() {
                 </thead>
                 <tbody>
                   {signalComparison.map((row) => (
-                    <tr key={row.feature} className="border-b border-border/50">
+                    <tr key={row.feature} className="border-b border-border/50 hover:bg-white/[0.02] transition-colors">
                       <td className="py-2 text-xs text-foreground/80">{row.feature}</td>
                       <td className="text-center py-2">
                         {row.sepot ? (
@@ -327,11 +443,24 @@ export default function BezpecnostPage() {
               </table>
             </div>
           </motion.div>
+
+          <motion.div
+            className="text-center mt-6"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={fadeUp}
+            custom={2}
+          >
+            <Link href="/srovnani" className="btn-ghost text-sm text-accent">
+              Kompletní srovnání se všemi messengery <ArrowRight size={14} />
+            </Link>
+          </motion.div>
         </div>
       </section>
 
       {/* Threat Model */}
-      <section className="py-12 md:py-16 bg-background-secondary/30">
+      <section className="section">
         <div className="container">
           <motion.div className="text-center mb-14" initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={0}>
             <h2 className="heading-2 mb-4">Model <span className="text-gradient">hrozeb</span></h2>
@@ -344,7 +473,7 @@ export default function BezpecnostPage() {
             {threats.map((threat, i) => (
               <motion.div
                 key={threat.title}
-                className="card-hover"
+                className="card-hover group"
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
@@ -353,7 +482,9 @@ export default function BezpecnostPage() {
               >
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-3">
-                    <threat.icon size={20} className="text-cyan" />
+                    <div className="w-10 h-10 rounded-lg bg-background border border-border flex items-center justify-center group-hover:border-cyan/30 transition-colors">
+                      <threat.icon size={18} className="text-cyan" />
+                    </div>
                     <h3 className="font-semibold text-sm">{threat.title}</h3>
                   </div>
                   <span className={`text-xs px-2 py-0.5 rounded-full ${
@@ -372,7 +503,7 @@ export default function BezpecnostPage() {
       </section>
 
       {/* Audit Status */}
-      <section className="section">
+      <section className="section aurora-bg">
         <div className="container">
           <motion.div
             className="gradient-border text-center max-w-2xl mx-auto"
@@ -382,9 +513,11 @@ export default function BezpecnostPage() {
             variants={fadeUp}
             custom={0}
           >
-            <FileSearch size={40} className="text-accent mx-auto mb-4" />
+            <div className="w-16 h-16 rounded-2xl bg-accent/10 border border-accent/20 flex items-center justify-center mx-auto mb-4 shadow-lg shadow-accent/10">
+              <FileSearch size={32} className="text-accent" />
+            </div>
             <h2 className="heading-3 mb-3">Bezpečnostní audit</h2>
-            <p className="text-sm text-muted mb-4">
+            <p className="text-sm text-muted mb-6">
               Šepot je aktuálně ve fázi vývoje. Plánujeme nezávislý bezpečnostní audit
               před vydáním stabilní verze. Zdrojový kód je otevřený -- můžete ho zkontrolovat sami.
             </p>

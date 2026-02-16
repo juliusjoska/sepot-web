@@ -45,14 +45,16 @@
            bg-gradient-to-r from-accent to-accent-dark
            text-white font-semibold text-sm
            shadow-lg shadow-accent/25
-           hover:shadow-accent/40 hover:brightness-110
+           hover:shadow-accent/40 hover:shadow-xl hover:brightness-110 hover:scale-[1.02]
+           active:scale-[0.98]
            transition-all duration-300;
   }
   .btn-outline {
     @apply inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl
            border border-border bg-white/[0.03]
            text-foreground font-semibold text-sm
-           hover:border-accent/50 hover:bg-accent/5
+           hover:border-accent/50 hover:bg-accent/5 hover:scale-[1.02]
+           active:scale-[0.98]
            transition-all duration-300;
   }
   .btn-ghost {
@@ -66,8 +68,9 @@
   .card-hover {
     @apply rounded-2xl border border-border bg-background-secondary/50
            p-6 md:p-7 backdrop-blur-sm
-           hover:border-accent/30 hover:bg-white/[0.03]
-           transition-all duration-300;
+           hover:border-accent/30 hover:bg-white/[0.03] hover:shadow-lg hover:shadow-accent/5
+           hover:-translate-y-1
+           transition-all duration-500;
   }
   .card-glass {
     @apply rounded-2xl border border-white/[0.06] bg-white/[0.02]
@@ -102,6 +105,29 @@
     background-size: 60px 60px;
   }
 
+  /* Aurora background */
+  .aurora-bg {
+    position: relative;
+    overflow: hidden;
+  }
+  .aurora-bg::before {
+    content: '';
+    position: absolute;
+    inset: -50%;
+    background: linear-gradient(
+      45deg,
+      transparent 20%,
+      rgba(16,185,129,0.06) 30%,
+      rgba(6,182,212,0.08) 40%,
+      rgba(132,204,22,0.04) 50%,
+      rgba(16,185,129,0.06) 60%,
+      transparent 80%
+    );
+    background-size: 400% 400%;
+    animation: aurora 15s ease-in-out infinite;
+    pointer-events: none;
+  }
+
   /* Terminal / crypto code look */
   .terminal {
     @apply rounded-2xl border border-border bg-background-secondary overflow-hidden font-mono;
@@ -116,9 +142,39 @@
   /* Phone mockup */
   .phone-frame {
     @apply rounded-[2.5rem] bg-gray-900 p-3 shadow-2xl shadow-black/50;
+    background: linear-gradient(145deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
   }
   .phone-screen {
     @apply rounded-[2rem] overflow-hidden bg-background;
+  }
+
+  /* Noise texture overlay */
+  .noise-overlay {
+    position: relative;
+  }
+  .noise-overlay::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+
+  /* Shimmer text effect */
+  .text-shimmer {
+    background: linear-gradient(
+      110deg,
+      #34d399 0%,
+      #22d3ee 45%,
+      #a3e635 55%,
+      #34d399 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2.5s ease-in-out infinite;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 }
 
@@ -128,5 +184,8 @@
   }
   .glow-cyan {
     box-shadow: 0 0 40px rgba(6,182,212,0.15), 0 0 80px rgba(6,182,212,0.05);
+  }
+  .glow-accent-strong {
+    box-shadow: 0 0 60px rgba(16,185,129,0.2), 0 0 120px rgba(16,185,129,0.08), 0 0 200px rgba(6,182,212,0.04);
   }
 }

@@ -197,14 +197,14 @@ function CellIcon({ value }: { value: CellValue }) {
   if (value === true) return <Check size={16} className="text-accent" />
   if (value === false) return <X size={16} className="text-red-400/60" />
   if (value === 'partial') return <Minus size={16} className="text-yellow-400" />
-  return <span className="text-xs text-cyan">{value}</span>
+  return <span className="text-xs text-cyan font-medium">{value}</span>
 }
 
 export default function SrovnaniPage() {
   return (
     <div className="mesh-gradient grid-pattern min-h-screen">
       {/* Hero */}
-      <section className="section pb-12">
+      <section className="section pb-12 aurora-bg">
         <div className="container text-center">
           <motion.div initial="hidden" animate="visible" variants={fadeUp} custom={0}>
             <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/10 border border-accent/20 text-accent text-sm font-medium mb-6">
@@ -212,12 +212,44 @@ export default function SrovnaniPage() {
             </span>
           </motion.div>
           <motion.h1 className="heading-1 mb-6" initial="hidden" animate="visible" variants={fadeUp} custom={1}>
-            Šepot vs <span className="text-gradient">ostatní</span>
+            Šepot vs <span className="text-shimmer">ostatní</span>
           </motion.h1>
           <motion.p className="text-lg text-muted max-w-2xl mx-auto" initial="hidden" animate="visible" variants={fadeUp} custom={2}>
             Detailní srovnání Šepotu s nejpopulárnějšími messengery.
             Kde vynikáme a kde máme prostor pro zlepšení.
           </motion.p>
+        </div>
+      </section>
+
+      {/* Score summary */}
+      <section className="py-12">
+        <div className="container">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 max-w-4xl mx-auto">
+            {messengers.map((m, i) => {
+              const total = categories.reduce((acc, cat) => {
+                return acc + cat.features.reduce((fAcc, f) => {
+                  const val = f.values[i]
+                  return fAcc + (val === true ? 1 : val === 'partial' ? 0.5 : 0)
+                }, 0)
+              }, 0)
+              const max = categories.reduce((acc, cat) => acc + cat.features.length, 0)
+              const pct = Math.round((total / max) * 100)
+              return (
+                <motion.div
+                  key={m}
+                  className={`card-hover text-center ${i === 0 ? 'border-accent/30 border ring-1 ring-accent/20' : ''}`}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true }}
+                  variants={fadeUp}
+                  custom={i}
+                >
+                  <p className={`text-2xl font-bold ${i === 0 ? 'text-accent' : 'text-foreground'}`}>{pct}%</p>
+                  <p className={`text-xs ${i === 0 ? 'text-accent' : 'text-muted'} mt-1`}>{m}</p>
+                </motion.div>
+              )
+            })}
+          </div>
         </div>
       </section>
 
@@ -236,7 +268,9 @@ export default function SrovnaniPage() {
               custom={0}
             >
               <div className="flex items-center gap-3 mb-6">
-                <cat.icon size={22} className="text-accent" />
+                <div className="w-10 h-10 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center">
+                  <cat.icon size={20} className="text-accent" />
+                </div>
                 <h2 className="heading-3">{cat.title}</h2>
               </div>
 
@@ -254,7 +288,7 @@ export default function SrovnaniPage() {
                   </thead>
                   <tbody>
                     {cat.features.map((feature) => (
-                      <tr key={feature.name} className="border-b border-border/30">
+                      <tr key={feature.name} className="border-b border-border/30 hover:bg-white/[0.02] transition-colors">
                         <td className="py-2.5 pr-4 text-xs text-foreground/80">{feature.name}</td>
                         {feature.values.map((val, i) => (
                           <td key={i} className={`text-center py-2.5 px-2 ${i === 0 ? 'bg-accent/[0.03]' : ''}`}>
@@ -283,18 +317,18 @@ export default function SrovnaniPage() {
             </p>
           </motion.div>
 
-          <div className="space-y-5">
+          <div className="space-y-5 max-w-4xl mx-auto">
             {competitorDetails.map((comp, i) => (
               <motion.div
                 key={comp.name}
-                className="card-hover"
+                className="card-hover group"
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
                 variants={fadeUp}
                 custom={i}
               >
-                <h3 className={`heading-3 mb-4 ${comp.color}`}>{comp.name}</h3>
+                <h3 className={`heading-3 mb-4 ${comp.color} group-hover:brightness-125 transition-all`}>{comp.name}</h3>
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
                     <p className="text-xs font-medium text-accent mb-2 uppercase tracking-wide">Silné stránky</p>
@@ -326,10 +360,10 @@ export default function SrovnaniPage() {
       </section>
 
       {/* CTA */}
-      <section className="section">
+      <section className="section aurora-bg">
         <div className="container text-center">
           <motion.div initial="hidden" whileInView="visible" viewport={{ once: true }} variants={fadeUp} custom={0}>
-            <h2 className="heading-2 mb-4">Šepot nabízí <span className="text-gradient">víc</span></h2>
+            <h2 className="heading-2 mb-4">Šepot nabízí <span className="text-shimmer">víc</span></h2>
             <p className="text-muted mb-8 max-w-lg mx-auto">
               Open source server, self-hosting, žádné telefonní číslo, zero metadata.
               Soukromí, jak má být.

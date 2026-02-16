@@ -4,7 +4,7 @@ import { motion } from 'framer-motion'
 import Link from 'next/link'
 import {
   Lock, MessageSquare, Users, FileUp, Mic, RefreshCw,
-  Shield, Zap, Eye, EyeOff, Key, Server,
+  Shield, Zap, Eye, Key, Server,
   ArrowRight, CheckCircle2, Terminal, Smartphone
 } from 'lucide-react'
 
@@ -12,18 +12,19 @@ const fadeUp = {
   hidden: { opacity: 0, y: 30 },
   visible: (i: number) => ({
     opacity: 1, y: 0,
-    transition: { delay: i * 0.1, duration: 0.5, ease: 'easeOut' as const },
+    transition: { delay: i * 0.08, duration: 0.5, ease: [0.16, 1, 0.3, 1] as const },
   }),
 }
 
 const modules = [
   {
     icon: Lock,
-    title: 'Šifrování',
+    title: 'E2E šifrování',
     subtitle: 'End-to-end, zero knowledge',
     color: 'text-accent',
     bgColor: 'bg-accent/10',
     borderColor: 'border-accent/20',
+    glowColor: 'shadow-accent/10',
     features: [
       'X25519 Diffie-Hellman pro výměnu klíčů',
       'XSalsa20-Poly1305 pro šifrování zpráv',
@@ -35,7 +36,7 @@ const modules = [
       'Zero-knowledge architektura serveru',
     ],
     mockup: (
-      <div className="terminal mt-4">
+      <div className="terminal">
         <div className="terminal-header">
           <div className="terminal-dot bg-red-500" />
           <div className="terminal-dot bg-yellow-500" />
@@ -59,6 +60,7 @@ const modules = [
     color: 'text-cyan',
     bgColor: 'bg-cyan/10',
     borderColor: 'border-cyan/20',
+    glowColor: 'shadow-cyan/10',
     features: [
       'Textové zprávy se šifrováním v reálném čase',
       'Mizící zprávy s nastavitelným časovačem',
@@ -70,7 +72,7 @@ const modules = [
       'Indikátor psaní v reálném čase',
     ],
     mockup: (
-      <div className="phone-frame mt-4 max-w-[220px] mx-auto">
+      <div className="phone-frame max-w-[220px] mx-auto">
         <div className="phone-screen">
           <div className="bg-background-secondary p-3 border-b border-border flex items-center gap-2">
             <div className="w-7 h-7 rounded-full bg-accent/20 flex items-center justify-center">
@@ -110,6 +112,7 @@ const modules = [
     color: 'text-lime',
     bgColor: 'bg-lime/10',
     borderColor: 'border-lime/20',
+    glowColor: 'shadow-lime/10',
     features: [
       'Skupinové E2E šifrování (Sender Keys)',
       'Až 256 členů ve skupině',
@@ -121,7 +124,7 @@ const modules = [
       'Ankety a hlasování',
     ],
     mockup: (
-      <div className="terminal mt-4">
+      <div className="terminal">
         <div className="terminal-header">
           <div className="terminal-dot bg-red-500" />
           <div className="terminal-dot bg-yellow-500" />
@@ -139,7 +142,7 @@ const modules = [
           </div>
           <div className="flex items-start gap-2">
             <span className="text-accent font-medium">Bob:</span>
-            <span className="text-foreground/80">Testuju -- vše šlapě</span>
+            <span className="text-foreground/80">Testuju -- vše šlape</span>
           </div>
           <div className="text-muted text-[10px] mt-2 flex items-center gap-1">
             <Lock size={10} /> Všech 5 členů ověřeno
@@ -155,6 +158,7 @@ const modules = [
     color: 'text-accent-light',
     bgColor: 'bg-accent-light/10',
     borderColor: 'border-accent-light/20',
+    glowColor: 'shadow-accent-light/10',
     features: [
       'Sdílení souborů až do 100 MB',
       'Šifrování souborů na straně klienta',
@@ -174,6 +178,7 @@ const modules = [
     color: 'text-cyan-light',
     bgColor: 'bg-cyan-light/10',
     borderColor: 'border-cyan-light/20',
+    glowColor: 'shadow-cyan-light/10',
     features: [
       'Nahrávání hlasových zpráv s E2E šifrováním',
       'Opus kodek pro kvalitní zvuk',
@@ -193,6 +198,7 @@ const modules = [
     color: 'text-lime-light',
     bgColor: 'bg-lime-light/10',
     borderColor: 'border-lime-light/20',
+    glowColor: 'shadow-lime-light/10',
     features: [
       'Synchronizace přes šifrovaný kanál',
       'Propojení až 5 zařízení',
@@ -218,36 +224,21 @@ const techStack = [
 
 export default function FunkcePage() {
   return (
-    <div className="mesh-gradient grid-pattern min-h-screen">
+    <div className="min-h-screen">
       {/* Hero */}
-      <section className="section pb-12">
-        <div className="container text-center">
-          <motion.div
-            initial="hidden"
-            animate="visible"
-            variants={fadeUp}
-            custom={0}
-          >
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/10 border border-accent/20 text-accent text-sm font-medium mb-6">
+      <section className="section pb-12 relative overflow-hidden aurora-bg">
+        <div className="absolute inset-0 mesh-gradient" />
+        <div className="absolute inset-0 grid-pattern opacity-30" />
+        <div className="container relative z-10 text-center">
+          <motion.div initial="hidden" animate="visible" variants={fadeUp} custom={0}>
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/10 border border-accent/20 text-accent text-sm font-medium mb-6 backdrop-blur-sm">
               <Shield size={14} /> Kompletní přehled funkcí
             </span>
           </motion.div>
-          <motion.h1
-            className="heading-1 mb-6"
-            initial="hidden"
-            animate="visible"
-            variants={fadeUp}
-            custom={1}
-          >
-            Vše, co <span className="text-gradient">Šepot</span> umí
+          <motion.h1 className="heading-1 mb-6" initial="hidden" animate="visible" variants={fadeUp} custom={1}>
+            Vše, co <span className="text-shimmer">Šepot</span> umí
           </motion.h1>
-          <motion.p
-            className="text-lg text-muted max-w-2xl mx-auto"
-            initial="hidden"
-            animate="visible"
-            variants={fadeUp}
-            custom={2}
-          >
+          <motion.p className="text-lg text-muted max-w-2xl mx-auto" initial="hidden" animate="visible" variants={fadeUp} custom={2}>
             Šest klíčových modulů pro skutečně soukromou komunikaci.
             Každý navržen s důrazem na bezpečnost, výkon a uživatelský komfort.
           </motion.p>
@@ -256,7 +247,7 @@ export default function FunkcePage() {
 
       {/* Modules */}
       {modules.map((mod, idx) => (
-        <section key={mod.title} className={`py-12 md:py-16 ${idx % 2 === 1 ? 'bg-background-secondary/30' : ''}`}>
+        <section key={mod.title} className={`py-12 md:py-20 ${idx % 2 === 1 ? 'bg-background-secondary/30' : ''}`}>
           <div className="container">
             <motion.div
               className="grid md:grid-cols-2 gap-10 md:gap-14 items-start"
@@ -264,26 +255,26 @@ export default function FunkcePage() {
               whileInView="visible"
               viewport={{ once: true, amount: 0.2 }}
             >
-              {/* Content side */}
+              {/* Content */}
               <div className={idx % 2 === 1 ? 'md:order-2' : ''}>
                 <motion.div variants={fadeUp} custom={0} className="mb-6">
-                  <div className={`inline-flex items-center justify-center w-12 h-12 rounded-xl ${mod.bgColor} ${mod.borderColor} border mb-4`}>
-                    <mod.icon size={24} className={mod.color} />
+                  <div className={`inline-flex items-center justify-center w-14 h-14 rounded-xl ${mod.bgColor} ${mod.borderColor} border mb-4 shadow-lg ${mod.glowColor}`}>
+                    <mod.icon size={26} className={mod.color} />
                   </div>
                   <h2 className="heading-2 mb-2">{mod.title}</h2>
                   <p className="text-muted">{mod.subtitle}</p>
                 </motion.div>
                 <motion.ul className="space-y-3" variants={fadeUp} custom={1}>
                   {mod.features.map((feature) => (
-                    <li key={feature} className="flex items-start gap-3">
-                      <CheckCircle2 size={18} className={`${mod.color} mt-0.5 shrink-0`} />
-                      <span className="text-sm text-foreground/80">{feature}</span>
+                    <li key={feature} className="flex items-start gap-3 group">
+                      <CheckCircle2 size={18} className={`${mod.color} mt-0.5 shrink-0 group-hover:scale-110 transition-transform`} />
+                      <span className="text-sm text-foreground/80 group-hover:text-foreground transition-colors">{feature}</span>
                     </li>
                   ))}
                 </motion.ul>
               </div>
 
-              {/* Mockup side */}
+              {/* Mockup */}
               <motion.div
                 className={idx % 2 === 1 ? 'md:order-1' : ''}
                 variants={fadeUp}
@@ -293,8 +284,11 @@ export default function FunkcePage() {
                   mod.mockup
                 ) : (
                   <div className={`card-hover ${mod.borderColor} border flex flex-col items-center justify-center min-h-[250px] text-center`}>
-                    <mod.icon size={48} className={`${mod.color} mb-4 opacity-40`} />
+                    <div className={`w-16 h-16 rounded-2xl ${mod.bgColor} flex items-center justify-center mb-4`}>
+                      <mod.icon size={32} className={`${mod.color} opacity-60`} />
+                    </div>
                     <p className="text-muted text-sm">Vizuální ukázka připravována</p>
+                    <p className="text-[10px] text-muted/50 mt-1">Dostupné v beta verzi</p>
                   </div>
                 )}
               </motion.div>
@@ -304,8 +298,9 @@ export default function FunkcePage() {
       ))}
 
       {/* Tech Stack */}
-      <section className="section">
-        <div className="container">
+      <section className="section relative overflow-hidden">
+        <div className="absolute inset-0 mesh-gradient opacity-50" />
+        <div className="container relative z-10">
           <motion.div
             className="text-center mb-14"
             initial="hidden"
@@ -326,14 +321,16 @@ export default function FunkcePage() {
             {techStack.map((tech, i) => (
               <motion.div
                 key={tech.name}
-                className="card-hover text-center"
+                className="card-hover text-center group"
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
                 variants={fadeUp}
                 custom={i}
               >
-                <tech.icon size={28} className="text-accent mx-auto mb-3" />
+                <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center mx-auto mb-3 group-hover:bg-accent/20 group-hover:scale-110 transition-all duration-300">
+                  <tech.icon size={24} className="text-accent" />
+                </div>
                 <h3 className="font-semibold mb-1">{tech.name}</h3>
                 <p className="text-xs text-muted">{tech.desc}</p>
               </motion.div>
@@ -343,8 +340,9 @@ export default function FunkcePage() {
       </section>
 
       {/* CTA */}
-      <section className="section">
-        <div className="container text-center">
+      <section className="section relative overflow-hidden aurora-bg">
+        <div className="absolute inset-0 mesh-gradient" />
+        <div className="container relative z-10 text-center">
           <motion.div
             initial="hidden"
             whileInView="visible"
@@ -353,7 +351,7 @@ export default function FunkcePage() {
             custom={0}
           >
             <h2 className="heading-2 mb-6">
-              Připraveni na <span className="text-gradient">soukromí</span>?
+              Připraveni na <span className="text-shimmer">soukromí</span>?
             </h2>
             <p className="text-muted mb-8 max-w-lg mx-auto">
               Šepot je ve vývoji. Přidejte se k čekací listině nebo se podívejte na zdrojový kód.
